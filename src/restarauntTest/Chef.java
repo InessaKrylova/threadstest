@@ -1,22 +1,22 @@
 package restarauntTest;
 
 public class Chef implements Runnable {
-    private Restaurant r;
+    private Restaurant restaurant;
 
     public void makeFood() throws InterruptedException {
-        synchronized (r) {
-            r.notifyAll();
-            while(r.orderTaken==false)
-                r.wait();
-            System.out.println("Start making food ");
+        synchronized (restaurant) {
+            restaurant.notifyAll();
+            while(restaurant.orderTaken==false)
+                restaurant.wait();
+            System.out.println("[Chef]: Start making food ");
             Thread.sleep(1000);
-            r.putFood(r.getOrder());
-            System.out.println("End making food ");
+            restaurant.putFood(restaurant.getOrder());
+            System.out.println("[Chef]: End making food ");
         }
     }
 
     public Chef(Restaurant r) {
-        this.r=r;
+        this.restaurant =r;
     }
 
     @Override

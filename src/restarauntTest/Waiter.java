@@ -1,25 +1,26 @@
 package restarauntTest;
 
 public class Waiter implements Runnable {
-    private Restaurant r;
+    private Restaurant restaurant;
 
     public void makeServe() throws InterruptedException {
-        synchronized (r) {
-            r.notifyAll();
-            while(r.orderMadeByClient == false)
-                r.wait();
-            System.out.println("Start serving order ");
+        synchronized (restaurant) {
+            restaurant.notifyAll();
+            while(restaurant.orderMadeByClient == false)
+                restaurant.wait();
+            System.out.println("[Waiter]: Start serving order ");
             Thread.sleep(1000);
-            r.putOrder(r.getOrderMadeByClient());
-            while(r.orderReady == false)
-                r.wait();
-            r.putOrderReceived(r.getFood());
-            System.out.println("End serving order ");
+            restaurant.putOrder(restaurant.getOrderMadeByClient());
+            while(restaurant.orderReady == false) {
+                restaurant.wait();
+            }
+            restaurant.putOrderReceived(restaurant.getFood());
+            System.out.println("[Waiter]: End serving order ");
         }
     }
 
     public Waiter(Restaurant r) {
-        this.r=r;
+        this.restaurant =r;
     }
 
     @Override

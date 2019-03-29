@@ -1,11 +1,16 @@
 package restarauntTest;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+
 public class Restaurant {
     boolean orderMadeByClient;
     boolean orderTaken;
     boolean orderReady;
     boolean orderReceived;
     long orderId;
+
+    BlockingQueue<String> blockingQueue = new SynchronousQueue();
 
     public Restaurant() {
     }
@@ -33,11 +38,11 @@ public class Restaurant {
 
     synchronized long getOrderMadeByClient() {
         while (!orderMadeByClient) {
-
+            waitWithProcessing();
         }
         orderMadeByClient = false;
         notifyAll();
-        System.out.println("get order from client #" + orderId);
+        System.out.println("--- get order from client #" + orderId);
         return orderId;
     }
 
@@ -48,7 +53,7 @@ public class Restaurant {
         orderMadeByClient = true;
         this.orderId = l;
         notifyAll();
-        System.out.println("put order client #" + l);
+        System.out.println("--- put order client #" + l);
     }
 
     synchronized long getOrder() {
@@ -57,7 +62,7 @@ public class Restaurant {
         }
         orderTaken = false;
         notifyAll();
-        System.out.println("get order from waiter #" + orderId);
+        System.out.println("--- get order from waiter #" + orderId);
         return orderId;
     }
 
@@ -68,7 +73,7 @@ public class Restaurant {
         orderTaken = true;
         this.orderId = l;
         notifyAll();
-        System.out.println("put order to cook #" + l);
+        System.out.println("--- put order to cook #" + l);
     }
 
     synchronized long getFood() {
@@ -77,7 +82,7 @@ public class Restaurant {
         }
         orderReady = false;
         notifyAll();
-        System.out.println("get order by waiter #" + orderId);
+        System.out.println("--- get order by waiter #" + orderId);
         return orderId;
     }
 
@@ -88,7 +93,7 @@ public class Restaurant {
         orderReady = true;
         this.orderId = n;
         notifyAll();
-        System.out.println("put order by cook #" + n);
+        System.out.println("--- put order by cook #" + n);
     }
 
     synchronized long getOrderReceived() {
@@ -97,7 +102,7 @@ public class Restaurant {
         }
         orderReceived = false;
         notifyAll();
-        System.out.println("get order by client #" + orderId);
+        System.out.println("--- get order by client #" + orderId);
         return orderId;
     }
 
@@ -108,7 +113,7 @@ public class Restaurant {
         orderReceived = true;
         this.orderId = l;
         notifyAll();
-        System.out.println("put order by waiter #" + l);
+        System.out.println("--- put order by waiter #" + l);
     }
 }
 
