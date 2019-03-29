@@ -4,28 +4,68 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 public class Restaurant {
-    boolean orderMadeByClient;
-    boolean orderTaken;
-    boolean orderReady;
-    boolean orderReceived;
-    long orderId;
+    private boolean orderMadeByClient;
+    private boolean orderTaken;
+    private boolean orderReady;
+    private boolean orderReceived;
+    private long orderId;
+    private BlockingQueue<String> blockingQueue = new SynchronousQueue<>();
 
-    BlockingQueue<String> blockingQueue = new SynchronousQueue();
+    public boolean isOrderMadeByClient() {
+        return orderMadeByClient;
+    }
+
+    public void setOrderMadeByClient(boolean orderMadeByClient) {
+        this.orderMadeByClient = orderMadeByClient;
+    }
+
+    public boolean isOrderTaken() {
+        return orderTaken;
+    }
+
+    public void setOrderTaken(boolean orderTaken) {
+        this.orderTaken = orderTaken;
+    }
+
+    public boolean isOrderReady() {
+        return orderReady;
+    }
+
+    public void setOrderReady(boolean orderReady) {
+        this.orderReady = orderReady;
+    }
+
+    public boolean isOrderReceived() {
+        return orderReceived;
+    }
+
+    public void setOrderReceived(boolean orderReceived) {
+        this.orderReceived = orderReceived;
+    }
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public BlockingQueue<String> getBlockingQueue() {
+        return blockingQueue;
+    }
+
+    public void setBlockingQueue(BlockingQueue<String> blockingQueue) {
+        this.blockingQueue = blockingQueue;
+    }
 
     public Restaurant() {
     }
 
     public void makeRestaurant() {
-        Client cl = new Client(this);
-        Chef ch = new Chef(this);
-        Waiter w = new Waiter(this);
-        Thread t1 = new Thread(cl);
-        Thread t2 = new Thread(w);
-        Thread t3 = new Thread(ch);
-
-        t1.start();
-        t2.start();
-        t3.start();
+        new Thread(new Client(this)).start();
+        new Thread(new Chef(this)).start();
+        new Thread(new Waiter(this)).start();
     }
 
     public void waitWithProcessing() {

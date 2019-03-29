@@ -1,23 +1,24 @@
 package restarauntTest;
 
 public class Client implements Runnable {
-    private Restaurant restaurant;
+    private final Restaurant restaurant;
 
     public void makeOrder() throws InterruptedException {
         synchronized (restaurant) {
             restaurant.notifyAll();
             System.out.println("[Client]: Start ordering ");
             Thread.sleep(1000);
-            restaurant.putOrderMadeByClient(restaurant.orderId);
+            restaurant.putOrderMadeByClient(restaurant.getOrderId());
             System.out.println("[Client]: End ordering ");
-            while(restaurant.orderReceived==false)
+            while (!restaurant.isOrderReceived()) {
                 restaurant.wait();
+            }
             restaurant.getOrderReceived();
         }
     }
 
     public Client(Restaurant r) {
-        this.restaurant =r;
+        this.restaurant = r;
     }
 
     public void run() {

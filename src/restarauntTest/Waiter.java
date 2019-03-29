@@ -6,12 +6,13 @@ public class Waiter implements Runnable {
     public void makeServe() throws InterruptedException {
         synchronized (restaurant) {
             restaurant.notifyAll();
-            while(restaurant.orderMadeByClient == false)
+            while(!restaurant.isOrderMadeByClient()) {
                 restaurant.wait();
+            }
             System.out.println("[Waiter]: Start serving order ");
             Thread.sleep(1000);
             restaurant.putOrder(restaurant.getOrderMadeByClient());
-            while(restaurant.orderReady == false) {
+            while(!restaurant.isOrderReady()) {
                 restaurant.wait();
             }
             restaurant.putOrderReceived(restaurant.getFood());

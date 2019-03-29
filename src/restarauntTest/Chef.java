@@ -6,8 +6,9 @@ public class Chef implements Runnable {
     public void makeFood() throws InterruptedException {
         synchronized (restaurant) {
             restaurant.notifyAll();
-            while(restaurant.orderTaken==false)
+            while(!restaurant.isOrderTaken()) {
                 restaurant.wait();
+            }
             System.out.println("[Chef]: Start making food ");
             Thread.sleep(1000);
             restaurant.putFood(restaurant.getOrder());
